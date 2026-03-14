@@ -1,0 +1,1016 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1428</width>
+    <height>763</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>数字图像真实性鉴定系统</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* =========================================
+   全局基础设置 (清晰易读的深灰字体)
+========================================= */
+* {
+    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
+    font-size: 13px;
+    color: #333333; /* 主字体颜色：深灰，比纯黑柔和 */
+}
+
+/* 主窗口背景色 (非常浅的灰白色，减少视觉疲劳) */
+QMainWindow, #centralwidget {
+    background-color: #F0F2F5; 
+}
+
+/* 菜单栏 */
+QMenuBar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #D9D9D9;
+}
+QMenuBar::item:selected {
+    background-color: #E6F7FF;
+    color: #005FB8;
+}
+
+/* =========================================
+   一级栏目标题 (title_1 到 title_5)
+   样式：浅蓝底色 + 沉稳深蓝左侧边条
+========================================= */
+QLabel[objectName^=&quot;title_&quot;] {
+    background-color: #E6F0FA; 
+    color: #005A9E; /* 沉稳的专业蓝 */
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 10px; /* 减小内边距，防止字被挤压 */
+    border-left: 4px solid #005A9E;
+    border-radius: 2px;
+}
+
+/* =========================================
+   优化后：功能区的二级小标题 (块状标签风格)
+========================================= */
+QLabel[text=&quot;图像真实性鉴定&quot;], QLabel[text=&quot;图像处理&quot;] {
+    background-color: #F0F4F8; /* 极浅的灰蓝色背景 */
+    color: #005A9E; /* 沉稳蓝文字，呼应顶部主标题 */
+    font-weight: bold;
+    padding: 8px 12px; /* 增加内边距，撑起高度 */
+    border-radius: 6px; /* 更圆润的边角 */
+    margin-top: 15px; /* 与上方的元素拉开呼吸空间 */
+    margin-bottom: 5px; /* 与下方的首个按钮保持微小距离 */
+}
+
+/* =========================================
+   优化后：功能按钮 (现代扁平侧边栏风格)
+========================================= */
+QPushButton {
+    background-color: transparent; /* 默认透明，与大背景融为一体 */
+    border: 1px solid transparent; /* 透明边框占位，防止悬停时控件跳动 */
+    border-radius: 6px;
+    padding: 8px 15px;
+    color: #4A4A4A; /* 深灰文字，不刺眼 */
+    text-align: left; /* 【关键】文字靠左，为前面的图标留出整齐的空间 */
+    font-weight: 500;
+}
+
+/* 悬停状态 (Hover) - 浮现底色，文字变亮蓝 */
+QPushButton:hover {
+    background-color: #FFFFFF; /* 悬停时凸显为白色卡片 */
+    border: 1px solid #E0E4E8; /* 细微的边框勾勒 */
+    color: #1890FF; /* 文字亮起，提供强烈的交互暗示 */
+}
+
+/* 按下状态 (Pressed) - 物理按压反馈 */
+QPushButton:pressed {
+    background-color: #E6F0FA; /* 按下时变为更深的蓝色底 */
+    color: #005A9E;
+    /* 【高级细节】下面两行通过改变内边距，模拟按钮被真实按下去的物理下沉感 */
+    padding-top: 10px; 
+    padding-left: 17px; 
+} /*=========================================
+   检材区 (虚线上传框)
+========================================= */
+QLabel[objectName^=&quot;box_&quot;] {
+    background-color: #FFFFFF;
+    border: 1px dashed #C0C0C0; /* 灰色虚线 */
+    border-radius: 6px;
+    color: #999999; 
+    font-size: 24px; /* 加号放大 */
+}
+
+QLabel[objectName^=&quot;box_&quot;]:hover {
+    border: 1px dashed #1890FF;
+    background-color: #F0F7FF;
+    color: #1890FF; /* 悬停变蓝，暗示可交互 */
+}
+
+/* =========================================
+   图像与文本显示区 (纯白面板)
+========================================= */
+QLabel#img_evidence, QLabel#img_result, QTextEdit, QListWidget {
+    background-color: #FFFFFF; /* 纯白画布 */
+    border: 1px solid #D9D9D9; /* 清晰的浅灰边框，划定界限 */
+    border-radius: 4px;
+    color: #999999; /* 占位文字颜色 */
+}
+
+QTextEdit, QListWidget {
+    color: #333333; /* 实际输入的文字为深色 */
+}
+
+/* =========================================
+   精美的滑块 (Slider)
+========================================= */
+QSlider::groove:horizontal {
+    border: 1px solid #D9D9D9;
+    background: #F0F0F0;
+    height: 6px;
+    border-radius: 3px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #1890FF; /* 走过的进度条为蓝色 */
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #FFFFFF;
+    border: 2px solid #1890FF;
+    width: 14px;
+    height: 14px;
+    margin: -5px 0;
+    border-radius: 7px;
+}
+
+/* =========================================
+   进度条 (ProgressBar)
+========================================= */
+QProgressBar {
+    background-color: #F0F0F0;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    text-align: center;
+    color: #333333;
+}
+
+QProgressBar::chunk {
+    background-color: #1890FF;
+    border-radius: 3px;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3,7,7,3">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <widget class="QLabel" name="title_1">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>111</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>      检材区</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="box_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>160</y>
+         <width>110</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="box_4">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>400</y>
+         <width>110</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="box_5">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>520</y>
+         <width>110</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="box_1">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>110</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="box_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>280</y>
+         <width>110</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_2" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <widget class="QPushButton" name="pushButton_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>500</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>图像去模糊</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_9">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>540</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>图像去噪</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>170</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>颜色直方图</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>370</y>
+         <width>165</width>
+         <height>54</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>图像处理</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_10">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>580</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>去雨/雪/雾</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>420</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>图像修复</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>250</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>篡改鉴定及定位</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>90</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>图像基本信息</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>130</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>DCT直方图</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="title_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>165</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>功能区</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>210</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>生成式图像检测</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_7">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>460</y>
+         <width>165</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>超分辨率</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>165</width>
+         <height>54</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>图像真实性鉴定</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_3" native="true">
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>420</y>
+         <width>370</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>默认置信度：0.6</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>460</y>
+         <width>370</width>
+         <height>10</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="img_evidence">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>370</width>
+         <height>370</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="title_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>370</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>证据图像</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>500</y>
+         <width>370</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>实时进度条</string>
+       </property>
+      </widget>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>550</y>
+         <width>370</width>
+         <height>10</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_4" native="true">
+      <widget class="QLabel" name="img_result">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>370</width>
+         <height>370</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>370</width>
+         <height>370</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="title_4">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>370</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>370</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>结果图像</string>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="txt_info">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>420</y>
+         <width>371</width>
+         <height>241</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_5" native="true">
+      <widget class="QLabel" name="title_5">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>165</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>历史操作记录</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="list_history">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>40</y>
+         <width>165</width>
+         <height>621</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1428</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="action_1"/>
+    <addaction name="action_2"/>
+    <addaction name="action_3"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>退出</string>
+    </property>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBar_3">
+   <property name="windowTitle">
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>RightToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBar_4">
+   <property name="windowTitle">
+    <string>toolBar_4</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="action_1">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>导出结果图像</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>导出历史记录</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
